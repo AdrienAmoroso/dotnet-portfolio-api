@@ -65,8 +65,10 @@ public class WorkItemsController : ControllerBase
     /// Create a new work item
     /// </summary>
     [HttpPost]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     [ProducesResponseType(typeof(WorkItemResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<WorkItemResponse>> Create([FromBody] CreateWorkItemRequest request)
     {
         if (!ModelState.IsValid)
@@ -80,9 +82,11 @@ public class WorkItemsController : ControllerBase
     /// Update an existing work item
     /// </summary>
     [HttpPut("{id:guid}")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     [ProducesResponseType(typeof(WorkItemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<WorkItemResponse>> Update(Guid id, [FromBody] UpdateWorkItemRequest request)
     {
         if (!ModelState.IsValid)
@@ -103,8 +107,10 @@ public class WorkItemsController : ControllerBase
     /// Delete a work item
     /// </summary>
     [HttpDelete("{id:guid}")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Delete(Guid id)
     {
         try
