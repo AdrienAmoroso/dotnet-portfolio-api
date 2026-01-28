@@ -30,13 +30,10 @@ public class WorkItemsIntegrationTests : IClassFixture<WebApplicationFactory<Pro
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {
-            // Set Test environment FIRST
             builder.UseEnvironment("Test");
             
-            // Configure test settings - add AFTER existing sources so they take precedence
             builder.ConfigureAppConfiguration((context, config) =>
             {
-                // Add test JWT configuration
                 config.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     ["Jwt:SecretKey"] = TestSecretKey,
@@ -46,16 +43,13 @@ public class WorkItemsIntegrationTests : IClassFixture<WebApplicationFactory<Pro
                 }!);
             });
             
-            // Configure services AFTER configuration
             builder.ConfigureServices(services =>
             {
-                // Add in-memory database for testing - use static name for shared database
                 services.AddDbContext<AppDbContext>(options =>
                 {
                     options.UseInMemoryDatabase(DatabaseName);
                 });
 
-                // Reconfigure JWT Bearer to use test settings
                 services.PostConfigure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -71,7 +65,6 @@ public class WorkItemsIntegrationTests : IClassFixture<WebApplicationFactory<Pro
                     };
                 });
 
-                // Build service provider and ensure database is created
                 var serviceProvider = services.BuildServiceProvider();
                 using var scope = serviceProvider.CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();

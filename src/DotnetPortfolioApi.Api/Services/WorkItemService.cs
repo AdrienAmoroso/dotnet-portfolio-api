@@ -32,26 +32,19 @@ public class WorkItemService : IWorkItemService
         string sortBy = "createdAt",
         string sortDir = "desc")
     {
-        // Validate pagination
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 10;
 
         var query = _dbContext.WorkItems.AsQueryable();
 
-        // Apply filters
         if (status.HasValue)
             query = query.Where(x => x.Status == status.Value);
         
         if (priority.HasValue)
             query = query.Where(x => x.Priority == priority.Value);
 
-        // Get total count before pagination
         var totalCount = await query.CountAsync();
-
-        // Apply sorting
         query = ApplySorting(query, sortBy, sortDir);
-
-        // Apply pagination
         var items = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

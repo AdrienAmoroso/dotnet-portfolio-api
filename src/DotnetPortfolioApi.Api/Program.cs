@@ -7,8 +7,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-// Only register SQLite if we're not in test environment (tests will provide their own DbContext)
 if (!builder.Environment.EnvironmentName.Equals("Test", StringComparison.OrdinalIgnoreCase))
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
@@ -18,7 +16,6 @@ if (!builder.Environment.EnvironmentName.Equals("Test", StringComparison.Ordinal
 builder.Services.AddScoped<IWorkItemService, WorkItemService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["SecretKey"] ?? "TestSecretKeyForJWTThatIsAtLeast32CharactersLong123456";
 
@@ -38,7 +35,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-        ClockSkew = TimeSpan.Zero // Remove default 5 minute tolerance
+        ClockSkew = TimeSpan.Zero
     };
 });
 
@@ -50,7 +47,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Apply migrations in Development
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
@@ -60,14 +56,13 @@ if (app.Environment.IsDevelopment())
     }
 }
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "DotNet Portfolio API v1");
-        options.RoutePrefix = string.Empty; // Swagger UI at root (https://localhost:5001/)
+        options.RoutePrefix = string.Empty;
     });
 }
 

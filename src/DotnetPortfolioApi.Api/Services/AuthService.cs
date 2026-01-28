@@ -23,18 +23,13 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> RegisterAsync(string username, string email, string password)
     {
-        // Check if username already exists
         if (await _dbContext.Users.AnyAsync(u => u.Username == username))
             throw new InvalidOperationException("Username already exists");
 
-        // Check if email already exists
         if (await _dbContext.Users.AnyAsync(u => u.Email == email))
             throw new InvalidOperationException("Email already exists");
 
-        // Hash password with BCrypt
         var passwordHash = BCrypt.HashPassword(password);
-
-        // Create user
         var user = new User
         {
             Username = username,
@@ -47,7 +42,6 @@ public class AuthService : IAuthService
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
 
-        // Generate JWT token
         var token = GenerateJwtToken(user);
         var expiresAt = DateTime.UtcNow.AddHours(GetTokenExpirationHours());
 
@@ -62,18 +56,15 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> LoginAsync(string usernameOrEmail, string password)
     {
-        // Find user by username or email
         var user = await _dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
 
         if (user == null)
             throw new UnauthorizedAccessException("Invalid username/email or password");
 
-        // Verify password
         if (!BCrypt.Verify(password, user.PasswordHash))
             throw new UnauthorizedAccessException("Invalid username/email or password");
 
-        // Generate JWT token
         var token = GenerateJwtToken(user);
         var expiresAt = DateTime.UtcNow.AddHours(GetTokenExpirationHours());
 

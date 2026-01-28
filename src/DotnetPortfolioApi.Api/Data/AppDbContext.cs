@@ -16,7 +16,6 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // WorkItem configuration
         modelBuilder.Entity<WorkItem>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -28,7 +27,6 @@ public class AppDbContext : DbContext
             entity.Property(e => e.UpdatedAt).IsRequired();
         });
 
-        // User configuration
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id);
