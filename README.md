@@ -1,6 +1,6 @@
-# DotNet Portfolio API
+# Work Items API
 
-[![CI](https://github.com/AdrienAmoroso/dotnet-portfolio-api/actions/workflows/ci.yml/badge.svg)](https://github.com/AdrienAmoroso/dotnet-portfolio-api/actions/workflows/ci.yml)
+[![CI](https://github.com/AdrienAmoroso/workitems-api/actions/workflows/ci.yml/badge.svg)](https://github.com/AdrienAmoroso/workitems-api/actions/workflows/ci.yml)
 ![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -36,12 +36,12 @@ A production-ready ASP.NET Core Web API demonstrating enterprise-level developme
 ## Project Structure
 
 ```
-dotnet-portfolio-api/
+workitems-api/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml              # GitHub Actions CI pipeline
 ├── src/
-│   └── DotnetPortfolioApi.Api/
+│   └── WorkItems.Api/
 │       ├── Contracts/          # DTOs (Request/Response models)
 │       ├── Data/               # DbContext & configurations
 │       ├── Domain/             # Entity models
@@ -50,7 +50,7 @@ dotnet-portfolio-api/
 │       ├── Services/           # Business logic layer
 │       └── Program.cs          # Application entry point
 └── tests/
-    └── DotnetPortfolioApi.Api.Tests/
+    └── WorkItems.Api.Tests/
         ├── Integration/        # Integration tests
         └── Unit/               # Unit tests
 ```
@@ -66,14 +66,14 @@ dotnet-portfolio-api/
 
 ```bash
 # Clone the repository
-git clone https://github.com/AdrienAmoroso/dotnet-portfolio-api.git
-cd dotnet-portfolio-api
+git clone https://github.com/AdrienAmoroso/workitems-api.git
+cd workitems-api
 
 # Restore dependencies
 dotnet restore
 
 # Run the API (migrations are applied automatically in Development)
-dotnet run --project src/DotnetPortfolioApi.Api
+dotnet run --project src/WorkItems.Api
 ```
 
 The API will be available at:
@@ -84,10 +84,10 @@ The API will be available at:
 
 ```bash
 # Apply migrations
-dotnet ef database update --project src/DotnetPortfolioApi.Api
+dotnet ef database update --project src/WorkItems.Api
 
 # Create a new migration
-dotnet ef migrations add MigrationName --project src/DotnetPortfolioApi.Api
+dotnet ef migrations add MigrationName --project src/WorkItems.Api
 ```
 
 ### Run Tests
