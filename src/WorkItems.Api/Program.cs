@@ -105,6 +105,9 @@ if (!app.Environment.EnvironmentName.Equals("Test", StringComparison.OrdinalIgno
     dbContext.Database.Migrate();
 }
 
+// CORS must be first to handle preflight requests
+app.UseCors("AllowAngularApp");
+
 // Enable Swagger in all environments for demo purposes
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -113,8 +116,12 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "swagger";
 });
 
-app.UseHttpsRedirection();
-app.UseCors("AllowAngularApp");
+// Skip HTTPS redirection in production (Render handles SSL termination)
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
