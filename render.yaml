@@ -36,7 +36,6 @@ services:
     runtime: static
     buildCommand: cd frontend/workitems-web && npm install && npm run build -- --configuration=production
     staticPublishPath: ./frontend/workitems-web/dist/workitems-web/browser
-    plan: free
     routes:
       - type: rewrite
         source: /*
