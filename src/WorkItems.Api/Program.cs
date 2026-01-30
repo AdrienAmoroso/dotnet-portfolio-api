@@ -19,7 +19,8 @@ if (!builder.Environment.EnvironmentName.Equals("Test", StringComparison.Ordinal
         var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL")!;
         var npgsqlConnectionString = ConvertPostgresUrlToConnectionString(databaseUrl);
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(npgsqlConnectionString));
+            options.UseNpgsql(npgsqlConnectionString)
+                   .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
     }
     else
     {
