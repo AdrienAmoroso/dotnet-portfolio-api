@@ -124,7 +124,22 @@ if (!app.Environment.EnvironmentName.Equals("Test", StringComparison.OrdinalIgno
 {
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    
+    if (app.Environment.IsProduction())
+    {
+        // For PostgreSQL: Use EnsureCreated to create tables with correct UUID types
+        // This bypasses SQLite migrations which create TEXT columns for GUIDs
+        var dbCreated = dbContext.Database.EnsureCreated();
+        if (dbCreated)
+        {
+            app.Logger.LogInformation("PostgreSQL database created with proper UUID columns");
+        }
+    }
+    else
+    {
+        // For SQLite in development: use migrations
+        dbContext.Database.Migrate();
+    }
 }
 
 // CORS must be first to handle preflight requests
